@@ -27,11 +27,11 @@
     nav {
       position: fixed; top: 0; left: 0; width: 100%; z-index: 200;
       display: flex; align-items: center; justify-content: space-between;
-      padding: .6rem 3rem;
+      padding: 0 3rem;
       background: rgba(251,248,243,.95); backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border); transition: padding .35s, box-shadow .35s;
     }
-    nav.scrolled { padding: .4rem 3rem; box-shadow: 0 4px 24px rgba(30,27,24,.08); }
+    nav.scrolled { padding: 0 3rem; box-shadow: 0 4px 24px rgba(30,27,24,.08); }
     .nav-logo { display: flex; align-items: center; }
     .nav-logo img { height: 200px; width: auto; display: block; transition: height .35s; mix-blend-mode: multiply; }
     nav.scrolled .nav-logo img { height: 150px; }
@@ -232,9 +232,9 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      nav { padding: .8rem 1.5rem; }
-      nav.scrolled { padding: .6rem 1.5rem; }
-      .nav-logo img { height: 44px; }
+      nav { padding: 0 1.5rem; }
+      nav.scrolled { padding: 0 1.5rem; }
+      .nav-logo img { height: 60px; }
       .nav-links-desktop { display: none; }
       section { padding: 5rem 1.8rem; }
       .stats { padding: 3rem 1.8rem; }
