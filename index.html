@@ -31,10 +31,10 @@
       background: rgba(251,248,243,.95); backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border); transition: padding .35s, box-shadow .35s;
     }
-    nav.scrolled { padding: 0 3rem; box-shadow: 0 4px 24px rgba(30,27,24,.08); }
+    nav.scrolled { padding: .35rem 3rem; box-shadow: 0 4px 24px rgba(30,27,24,.08); }
     .nav-logo { display: flex; align-items: center; }
     .nav-logo img { height: 200px; width: auto; display: block; transition: height .35s; mix-blend-mode: multiply; }
-    nav.scrolled .nav-logo img { height: 150px; }
+    nav.scrolled .nav-logo img { height: 65px; }
 
     .nav-links-desktop { display: flex; gap: 2rem; list-style: none; align-items: center; }
     .nav-links-desktop a { font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); text-decoration: none; position: relative; padding-bottom: 2px; }
@@ -233,8 +233,9 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { padding: 0 1.5rem; }
-      nav.scrolled { padding: 0 1.5rem; }
+      nav.scrolled { padding: .3rem 1.5rem; }
       .nav-logo img { height: 60px; }
+      nav.scrolled .nav-logo img { height: 38px; }
       .nav-links-desktop { display: none; }
       section { padding: 5rem 1.8rem; }
       .stats { padding: 3rem 1.8rem; }
