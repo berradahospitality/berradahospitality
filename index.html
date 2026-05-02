@@ -267,31 +267,13 @@
     .cursor-key {
       position: fixed; top: 0; left: 0; width: 28px; height: 28px;
       pointer-events: none; z-index: 9999;
-      margin-left: -4px; margin-top: -2px;
-      transform: rotate(45deg);
+      margin-left: -7px; margin-top: -7px;
       transition: transform .18s ease, opacity .3s;
-      opacity: 0;
-      will-change: transform, left, top;
-    }
-    .cursor-key.active { opacity: 1; }
-    .cursor-key.hover { transform: rotate(45deg) scale(1.45); }
-    .cursor-ring {
-      position: fixed; top: 0; left: 0;
-      width: 40px; height: 40px;
-      border: 1.5px solid rgba(200,169,126,.45);
-      border-radius: 50%;
-      pointer-events: none; z-index: 9998;
-      margin-left: -20px; margin-top: -20px;
-      transition: width .25s ease, height .25s ease, margin .25s ease, border-color .25s;
       opacity: 0;
       will-change: left, top;
     }
-    .cursor-ring.active { opacity: 1; }
-    .cursor-ring.hover {
-      width: 56px; height: 56px;
-      margin-left: -28px; margin-top: -28px;
-      border-color: rgba(200,169,126,.8);
-    }
+    .cursor-key.active { opacity: 1; }
+    .cursor-key.hover { transform: scale(1.45); }
   </style>
 </head>
 <body>
@@ -299,10 +281,13 @@
 <!-- ── CURSEUR CLÉ ── -->
 <div class="cursor-key" id="cursorKey">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#C8A97E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+    <circle cx="7" cy="7" r="4"/>
+    <circle cx="7" cy="7" r="1.5" fill="#C8A97E" stroke="none"/>
+    <line x1="10.1" y1="10.1" x2="21" y2="21"/>
+    <line x1="18" y1="18" x2="21" y2="15"/>
+    <line x1="15" y1="21" x2="18" y2="18"/>
   </svg>
 </div>
-<div class="cursor-ring" id="cursorRing"></div>
 
 <!-- ── NAV ── -->
 <nav id="navbar">
@@ -616,30 +601,16 @@
   (function() {
     if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     const key = document.getElementById('cursorKey');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
 
     document.addEventListener('mousemove', function(e) {
-      mx = e.clientX; my = e.clientY;
-      key.style.left = mx + 'px';
-      key.style.top  = my + 'px';
-      if (!key.classList.contains('active')) {
-        key.classList.add('active');
-        ring.classList.add('active');
-      }
+      key.style.left = e.clientX + 'px';
+      key.style.top  = e.clientY + 'px';
+      if (!key.classList.contains('active')) key.classList.add('active');
     });
 
-    (function loop() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(loop);
-    })();
-
     document.querySelectorAll('a, button').forEach(function(el) {
-      el.addEventListener('mouseenter', function() { key.classList.add('hover'); ring.classList.add('hover'); });
-      el.addEventListener('mouseleave', function() { key.classList.remove('hover'); ring.classList.remove('hover'); });
+      el.addEventListener('mouseenter', function() { key.classList.add('hover'); });
+      el.addEventListener('mouseleave', function() { key.classList.remove('hover'); });
     });
   })();
 </script>
