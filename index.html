@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Berrada Hospitality — Conciergerie Immobilière au Maroc</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Cairo:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --sand:       #F5EFE6;
@@ -275,6 +275,24 @@
     }
     .cursor-key.active { opacity: 1; }
     .cursor-key.hover { transform: rotate(-90deg) scale(1.45); }
+
+    /* ── SÉLECTEUR DE LANGUE ── */
+    .lang-switcher { display: flex; gap: .35rem; align-items: center; list-style: none; padding-left: 1rem; margin-left: .6rem; border-left: 1px solid var(--border); }
+    .lang-btn { background: none; border: 1px solid var(--border); color: var(--ink); padding: .26rem .62rem; border-radius: 2px; font-size: .64rem; letter-spacing: .1em; transition: all .2s; font-family: 'Jost', sans-serif; text-transform: uppercase; }
+    .lang-btn.active, .lang-btn:hover { background: var(--clay); color: #fff; border-color: var(--clay); }
+    @media (max-width: 900px) { .lang-switcher { display: none; } }
+    /* RTL (arabe) */
+    [dir="rtl"] body { font-family: 'Cairo', sans-serif; }
+    [dir="rtl"] .hero-title, [dir="rtl"] .section-title, [dir="rtl"] .coming-soon-title,
+    [dir="rtl"] .service-name, [dir="rtl"] .concierge-name, [dir="rtl"] .step-title { font-family: 'Cairo', sans-serif; font-weight: 600; }
+    [dir="rtl"] nav { flex-direction: row-reverse; }
+    [dir="rtl"] .nav-links-desktop { flex-direction: row-reverse; }
+    [dir="rtl"] .hero { direction: rtl; }
+    [dir="rtl"] .hero-left { padding: 8rem 6rem 6rem 4rem; }
+    [dir="rtl"] .hero-tag::before, [dir="rtl"] .section-tag::before, [dir="rtl"] .nav-overlay-tag::before { display: none; }
+    [dir="rtl"] .nav-overlay-inner { transform: translateX(30px); }
+    [dir="rtl"] .nav-overlay.open .nav-overlay-inner { transform: translateX(0); }
+    [dir="rtl"] .nav-overlay-logo { right: 3rem; left: auto; }
   </style>
 </head>
 <body>
@@ -297,6 +315,11 @@
     <li><a href="#conciergerie">Conciergerie</a></li>
     <li><a href="#partenaires">Partenaires</a></li>
     <li><a href="#contact" class="nav-cta-desktop">Nous contacter</a></li>
+    <li class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')">ع</button>
+    </li>
   </ul>
   <div class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -321,6 +344,11 @@
     <div class="nav-overlay-footer">
       <a href="https://wa.me/212660795649" target="_blank">+212 6 60 79 56 49</a>
       <a href="mailto:berradahospitality@gmail.com">berradahospitality@gmail.com</a>
+      <div style="display:flex;gap:.4rem;margin-bottom:.8rem;width:100%;">
+        <button class="lang-btn active" style="color:rgba(245,239,230,.6);border-color:rgba(200,169,126,.25);" onclick="setLang('fr');closeMenu()">FR</button>
+        <button class="lang-btn" style="color:rgba(245,239,230,.6);border-color:rgba(200,169,126,.25);" onclick="setLang('en');closeMenu()">EN</button>
+        <button class="lang-btn" style="color:rgba(245,239,230,.6);border-color:rgba(200,169,126,.25);" onclick="setLang('ar');closeMenu()">ع</button>
+      </div>
       <a href="https://www.instagram.com/berradahospitality/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="display:flex;align-items:center;gap:.4rem;">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -593,6 +621,267 @@
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in, .fade-left, .fade-right').forEach(el => observer.observe(el));
+
+
+  // ── MOTEUR DE TRADUCTION ──
+  const LANGS = {
+    fr: {
+      'nav.annonces':'Annonces','nav.services':'Services','nav.conciergerie':'Conciergerie',
+      'nav.partenaires':'Partenaires','nav.cta':'Nous contacter','nav.comment':'Comment ça marche',
+      'nav.tag':'Conciergerie Immobilière au Maroc',
+      'hero.tag':'Conciergerie Immobilière au Maroc',
+      'hero.title':"L'art de gérer<br/><em>votre bien</em><br/>avec élégance",
+      'hero.sub':"Berrada Hospitality accompagne propriétaires et voyageurs avec un service haut de gamme — gestion, location, vente. Nous prenons soin de chaque détail.",
+      'hero.btn1':'Voir les annonces','hero.btn2':'Confier mon bien',
+      'stat.satisfaction':'Satisfaction client','stat.dispo':'Disponibilité',
+      'stat.gestion':'Gestion complète','stat.revenus':'Revenus en moyenne',
+      'annonces.tag':'Nos biens sélectionnés','annonces.title':'Nos <em>annonces</em>',
+      'annonces.desc':"Des propriétés d'exception au Maroc, gérées par notre équipe avec le plus grand soin.",
+      'annonces.tab1':'🏠 À Louer','annonces.tab2':'🏷️ À Vendre',
+      'annonces.loc.title':'Annonces de location bientôt disponibles',
+      'annonces.loc.desc':"Nous préparons une sélection de biens d'exception à louer au Maroc. Revenez bientôt ou contactez-nous directement.",
+      'annonces.loc.btn':'Nous contacter',
+      'annonces.vente.title':'Annonces de vente bientôt disponibles',
+      'annonces.vente.desc':"Notre portefeuille de biens à vendre est en cours de constitution. Contactez-nous pour être informé en priorité.",
+      'annonces.vente.btn':'Être informé en priorité',
+      'services.tag':'Notre expertise','services.title':'Services <em>immobiliers</em>',
+      'services.desc':"De l'achat à la gestion locative, nous couvrons l'ensemble du cycle immobilier.",
+      's1.name':'Achat & Vente','s1.desc':"Accompagnement complet dans vos transactions — évaluation, négociation et suivi juridique jusqu'à la signature.",
+      's2.name':'Promotion Immobilière','s2.desc':"Développement de projets résidentiels et commerciaux en partenariat avec les meilleurs promoteurs.",
+      's3.name':'Gestion Locative','s3.desc':"Gestion complète de votre bien : annonces, locataires, check-in/out, état des lieux et maintenance.",
+      's4.name':'Conseil & Investissement','s4.desc':"Analyse du marché, rentabilité locative, optimisation fiscale — pour maximiser votre investissement.",
+      's5.name':'Serrure Connectée','s5.desc':"Installation et gestion de serrures intelligentes pour un accès sécurisé à distance.",
+      's6.name':'Mandat de Gestion','s6.desc':"Confiez-nous votre bien sur-mesure. Vous encaissez vos revenus sans vous soucier du quotidien.",
+      'concierge.tag':'Expérience premium','concierge.title':'Services de <em>Conciergerie</em>',
+      'concierge.desc':"Nous orchestrons chaque séjour pour que vos hôtes vivent une expérience inoubliable.",
+      'c1.name':'Réservations & Agenda','c1.desc':"Gestion de votre calendrier sur toutes les plateformes sans double-booking.",
+      'c2.name':'Accueil & Check-in','c2.desc':"Accueil personnalisé, remise des clés, présentation du logement et conseils locaux.",
+      'c3.name':'Transferts & Transport','c3.desc':"Organisation des transferts aéroport, location de voitures, chauffeur privé.",
+      'c4.name':'Sorties & Expériences','c4.desc':"Excursions, ballade à cheval, cours de cuisine, spa Hammam — via nos partenaires.",
+      'c5.name':'Restauration & Paniers','c5.desc':"Réservation de tables, panier de bienvenue, chef à domicile sur demande.",
+      'c6.name':'Ménage & Maintenance','c6.desc':"Ménage professionnel, linge fourni, réparations gérées en temps réel.",
+      'process.tag':'Simple & transparent','process.title':'Comment ça <em>fonctionne</em> ?',
+      'process.desc':"Confier votre bien se fait en quatre étapes simples.",
+      'p1.title':'Premier contact','p1.desc':"Vous nous contactez, nous organisons une visite pour comprendre votre bien.",
+      'p2.title':'Évaluation & Devis','p2.desc':"Nous évaluons le potentiel et vous proposons un mandat sur-mesure.",
+      'p3.title':'Mise en ligne','p3.desc':"Photos pro, annonces optimisées, serrure connectée installée.",
+      'p4.title':'Vous encaissez','p4.desc':"Nous gérons tout, vous recevez vos revenus et un rapport mensuel.",
+      'part.tag':'Réseau de confiance','part.title':'Nos <em>partenaires</em>',
+      'part.desc':"Nous collaborons avec des acteurs locaux soigneusement sélectionnés pour offrir une expérience complète à nos clients.",
+      'part.cs.title':'Espace partenaires bientôt disponible',
+      'part.cs.desc':"Nos partenaires seront présentés ici très prochainement. Vous souhaitez rejoindre notre réseau ?",
+      'part.cs.btn':'Devenir partenaire',
+      'contact.tag':'Parlons de votre projet','contact.title':'Prêt à <em>nous confier</em><br/>votre bien ?',
+      'contact.desc':"Propriétaire, investisseur ou voyageur — notre équipe répond sous 24h.",
+      'contact.phone.label':'Téléphone & WhatsApp','contact.email.label':'Email',
+      'form.fname':'Prénom','form.fname.ph':'Ahmed','form.lname':'Nom','form.lname.ph':'Berrada',
+      'form.email':'Email','form.email.ph':'vous@exemple.com','form.phone':'Téléphone','form.phone.ph':'+212 6 XX XX XX XX',
+      'form.role':'Vous êtes…','form.role.opt0':'Choisir une option',
+      'form.role.opt1':"Propriétaire souhaitant confier mon bien",'form.role.opt2':"Investisseur à la recherche d'un bien",
+      'form.role.opt3':'Voyageur souhaitant réserver','form.role.opt4':'Partenaire potentiel','form.role.opt5':'Autre',
+      'form.message':'Message','form.message.ph':'Décrivez votre projet…','form.submit':'Envoyer ma demande →',
+      'footer.annonces':'Annonces','footer.services':'Services','footer.conciergerie':'Conciergerie',
+      'footer.partenaires':'Partenaires','footer.contact':'Contact',
+      'footer.copy':'© 2025 Berrada Hospitality · Tous droits réservés'
+    },
+    en: {
+      'nav.annonces':'Listings','nav.services':'Services','nav.conciergerie':'Concierge',
+      'nav.partenaires':'Partners','nav.cta':'Contact us','nav.comment':'How it works',
+      'nav.tag':'Real Estate Concierge in Morocco',
+      'hero.tag':'Real Estate Concierge in Morocco',
+      'hero.title':'The art of managing<br/><em>your property</em><br/>with elegance',
+      'hero.sub':"Berrada Hospitality supports owners and travelers with a premium service — management, rental, sales. We take care of every detail.",
+      'hero.btn1':'View listings','hero.btn2':'Entrust my property',
+      'stat.satisfaction':'Client satisfaction','stat.dispo':'Availability',
+      'stat.gestion':'Full management','stat.revenus':'Average revenue increase',
+      'annonces.tag':'Our selected properties','annonces.title':'Our <em>listings</em>',
+      'annonces.desc':"Exceptional properties in Morocco, managed by our team with the utmost care.",
+      'annonces.tab1':'🏠 For Rent','annonces.tab2':'🏷️ For Sale',
+      'annonces.loc.title':'Rental listings coming soon',
+      'annonces.loc.desc':"We are preparing a selection of exceptional properties for rent in Morocco. Check back soon or contact us directly.",
+      'annonces.loc.btn':'Contact us',
+      'annonces.vente.title':'Sale listings coming soon',
+      'annonces.vente.desc':"Our portfolio of properties for sale is being compiled. Contact us to be notified first.",
+      'annonces.vente.btn':'Get priority updates',
+      'services.tag':'Our expertise','services.title':'Real Estate <em>Services</em>',
+      'services.desc':"From purchase to rental management, we cover the entire real estate cycle.",
+      's1.name':'Purchase & Sale','s1.desc':"Full support in your transactions — evaluation, negotiation and legal follow-up until signing.",
+      's2.name':'Property Development','s2.desc':"Development of residential and commercial projects in partnership with the best developers.",
+      's3.name':'Rental Management','s3.desc':"Complete management of your property: listings, tenants, check-in/out, inventory and maintenance.",
+      's4.name':'Consulting & Investment','s4.desc':"Market analysis, rental profitability, tax optimization — to maximize your investment.",
+      's5.name':'Smart Lock','s5.desc':"Installation and management of smart locks for secure remote access.",
+      's6.name':'Management Mandate','s6.desc':"Entrust us with your property on your terms. You collect your income without worrying about daily operations.",
+      'concierge.tag':'Premium experience','concierge.title':'<em>Concierge</em> Services',
+      'concierge.desc':"We orchestrate every stay so your guests live an unforgettable experience.",
+      'c1.name':'Bookings & Calendar','c1.desc':"Calendar management across all platforms with no double-booking.",
+      'c2.name':'Welcome & Check-in','c2.desc':"Personalized welcome, key handover, property tour and local tips.",
+      'c3.name':'Transfers & Transport','c3.desc':"Airport transfers, car rentals, private driver arrangements.",
+      'c4.name':'Outings & Experiences','c4.desc':"Excursions, horse riding, cooking classes, Hammam spa — via our partners.",
+      'c5.name':'Catering & Baskets','c5.desc':"Table reservations, welcome basket, private chef on request.",
+      'c6.name':'Cleaning & Maintenance','c6.desc':"Professional cleaning, linen provided, repairs managed in real time.",
+      'process.tag':'Simple & transparent','process.title':'How does it <em>work</em>?',
+      'process.desc':"Entrusting your property is done in four simple steps.",
+      'p1.title':'First contact','p1.desc':"You contact us, we arrange a visit to understand your property.",
+      'p2.title':'Evaluation & Quote','p2.desc':"We evaluate the potential and offer you a tailored mandate.",
+      'p3.title':'Going live','p3.desc':"Professional photos, optimized listings, smart lock installed.",
+      'p4.title':'You collect','p4.desc':"We manage everything, you receive your income and a monthly report.",
+      'part.tag':'Trusted network','part.title':'Our <em>partners</em>',
+      'part.desc':"We work with carefully selected local players to offer a complete experience to our clients.",
+      'part.cs.title':'Partner space coming soon',
+      'part.cs.desc':"Our partners will be presented here very soon. Would you like to join our network?",
+      'part.cs.btn':'Become a partner',
+      'contact.tag':"Let's talk about your project",'contact.title':'Ready to <em>entrust us</em><br/>with your property?',
+      'contact.desc':"Owner, investor or traveler — our team responds within 24 hours.",
+      'contact.phone.label':'Phone & WhatsApp','contact.email.label':'Email',
+      'form.fname':'First name','form.fname.ph':'Ahmed','form.lname':'Last name','form.lname.ph':'Berrada',
+      'form.email':'Email','form.email.ph':'you@example.com','form.phone':'Phone','form.phone.ph':'+212 6 XX XX XX XX',
+      'form.role':'You are…','form.role.opt0':'Choose an option',
+      'form.role.opt1':'Owner wishing to entrust my property','form.role.opt2':'Investor looking for a property',
+      'form.role.opt3':'Traveler wishing to book','form.role.opt4':'Potential partner','form.role.opt5':'Other',
+      'form.message':'Message','form.message.ph':'Describe your project…','form.submit':'Send my request →',
+      'footer.annonces':'Listings','footer.services':'Services','footer.conciergerie':'Concierge',
+      'footer.partenaires':'Partners','footer.contact':'Contact',
+      'footer.copy':'© 2025 Berrada Hospitality · All rights reserved'
+    },
+    ar: {
+      'nav.annonces':'الإعلانات','nav.services':'الخدمات','nav.conciergerie':'الكونسيرج',
+      'nav.partenaires':'الشركاء','nav.cta':'تواصل معنا','nav.comment':'كيف يعمل',
+      'nav.tag':'إدارة عقارية فاخرة في المغرب',
+      'hero.tag':'إدارة عقارية فاخرة في المغرب',
+      'hero.title':'فن إدارة<br/><em>عقارك</em><br/>بأناقة',
+      'hero.sub':'برادة هوسبيتالتي يرافق أصحاب العقارات والمسافرين بخدمة راقية — إدارة، تأجير، بيع. نحن نعتني بكل التفاصيل.',
+      'hero.btn1':'عرض الإعلانات','hero.btn2':'أسند عقاري',
+      'stat.satisfaction':'رضا العملاء','stat.dispo':'التوفر',
+      'stat.gestion':'إدارة شاملة','stat.revenus':'زيادة الدخل',
+      'annonces.tag':'عقاراتنا المختارة','annonces.title':'إعلاناتنا <em>العقارية</em>',
+      'annonces.desc':'عقارات استثنائية في المغرب، تديرها فريقنا بأعلى مستوى من العناية.',
+      'annonces.tab1':'🏠 للإيجار','annonces.tab2':'🏷️ للبيع',
+      'annonces.loc.title':'إعلانات الإيجار قريباً',
+      'annonces.loc.desc':'نحن نعد مجموعة مختارة من العقارات الاستثنائية للإيجار في المغرب. عد قريباً أو تواصل معنا مباشرة.',
+      'annonces.loc.btn':'تواصل معنا',
+      'annonces.vente.title':'إعلانات البيع قريباً',
+      'annonces.vente.desc':'محفظتنا العقارية للبيع في طور الإعداد. تواصل معنا لتكون أول من يعلم.',
+      'annonces.vente.btn':'كن أول من يعلم',
+      'services.tag':'خبرتنا','services.title':'الخدمات <em>العقارية</em>',
+      'services.desc':'من الشراء إلى الإدارة الإيجارية، نغطي دورة العقار بأكملها.',
+      's1.name':'شراء وبيع','s1.desc':'مرافقة كاملة في معاملاتك — تقييم، تفاوض ومتابعة قانونية حتى التوقيع.',
+      's2.name':'التطوير العقاري','s2.desc':'تطوير مشاريع سكنية وتجارية بالشراكة مع أفضل المطورين.',
+      's3.name':'الإدارة الإيجارية','s3.desc':'إدارة كاملة لعقارك: إعلانات، مستأجرون، تسجيل الدخول/الخروج، جرد ومتابعة.',
+      's4.name':'الاستشارة والاستثمار','s4.desc':'تحليل السوق، مردودية الإيجار، التحسين الضريبي — لتعظيم استثمارك.',
+      's5.name':'القفل الذكي','s5.desc':'تركيب وإدارة الأقفال الذكية للوصول الآمن عن بعد.',
+      's6.name':'تفويض الإدارة','s6.desc':'أسند لنا عقارك وفق شروطك. أنت تستلم دخلك دون القلق من التفاصيل اليومية.',
+      'concierge.tag':'تجربة فاخرة','concierge.title':'خدمات <em>الكونسيرج</em>',
+      'concierge.desc':'نحن ننظم كل إقامة لتجعل ضيوفك يعيشون تجربة لا تُنسى.',
+      'c1.name':'الحجوزات والتقويم','c1.desc':'إدارة تقويمك على جميع المنصات دون تداخل في الحجوزات.',
+      'c2.name':'الاستقبال وتسجيل الدخول','c2.desc':'استقبال شخصي، تسليم المفاتيح، جولة في السكن ونصائح محلية.',
+      'c3.name':'النقل والتنقل','c3.desc':'تنظيم التنقل من المطار، تأجير السيارات، السائق الخاص.',
+      'c4.name':'الرحلات والتجارب','c4.desc':'رحلات، ركوب الخيل، دروس الطبخ، حمام مغربي — عبر شركائنا.',
+      'c5.name':'الطعام والسلال','c5.desc':'حجز الطاولات، سلة ترحيب، طاهٍ خاص عند الطلب.',
+      'c6.name':'التنظيف والصيانة','c6.desc':'تنظيف احترافي، مناشف مقدمة، إصلاحات تتم في الوقت الفعلي.',
+      'process.tag':'بسيط وشفاف','process.title':'كيف <em>يعمل</em> ذلك؟',
+      'process.desc':'إسناد عقارك يتم في أربع خطوات بسيطة.',
+      'p1.title':'التواصل الأول','p1.desc':'تتواصل معنا، ننظم زيارة لفهم عقارك.',
+      'p2.title':'التقييم والعرض','p2.desc':'نقيّم الإمكانات ونقدم لك عقداً مخصصاً.',
+      'p3.title':'الإطلاق','p3.desc':'صور احترافية، إعلانات محسّنة، قفل ذكي مركّب.',
+      'p4.title':'أنت تستلم','p4.desc':'نحن ندير كل شيء، تستلم دخلك وتقريراً شهرياً.',
+      'part.tag':'شبكة موثوقة','part.title':'شركاؤنا <em>المختارون</em>',
+      'part.desc':'نتعاون مع فاعلين محليين منتقَين بعناية لتقديم تجربة متكاملة لعملائنا.',
+      'part.cs.title':'فضاء الشركاء قريباً',
+      'part.cs.desc':'سيتم تقديم شركائنا هنا قريباً جداً. هل تريد الانضمام إلى شبكتنا؟',
+      'part.cs.btn':'كن شريكاً',
+      'contact.tag':'دعنا نتحدث عن مشروعك','contact.title':'هل أنت مستعد <em>لتسليمنا</em><br/>عقارك؟',
+      'contact.desc':'مالك، مستثمر أو مسافر — فريقنا يجيبك في غضون 24 ساعة.',
+      'contact.phone.label':'الهاتف وواتساب','contact.email.label':'البريد الإلكتروني',
+      'form.fname':'الاسم الأول','form.fname.ph':'أحمد','form.lname':'اسم العائلة','form.lname.ph':'برادة',
+      'form.email':'البريد الإلكتروني','form.email.ph':'you@example.com','form.phone':'الهاتف','form.phone.ph':'+212 6 XX XX XX XX',
+      'form.role':'أنت…','form.role.opt0':'اختر خياراً',
+      'form.role.opt1':'مالك يرغب في إسناد عقاره','form.role.opt2':'مستثمر يبحث عن عقار',
+      'form.role.opt3':'مسافر يرغب في الحجز','form.role.opt4':'شريك محتمل','form.role.opt5':'أخرى',
+      'form.message':'الرسالة','form.message.ph':'صف مشروعك…','form.submit':'← إرسال طلبي',
+      'footer.annonces':'الإعلانات','footer.services':'الخدمات','footer.conciergerie':'الكونسيرج',
+      'footer.partenaires':'الشركاء','footer.contact':'اتصل بنا',
+      'footer.copy':'© 2025 Berrada Hospitality · جميع الحقوق محفوظة'
+    }
+  };
+
+  function setLang(lang) {
+    const t = LANGS[lang];
+    // RTL
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+    // Boutons actifs
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('onclick').includes("'"+lang+"'"));
+    });
+    function tx(sel, key) { const e=document.querySelector(sel); if(e) e.textContent=t[key]; }
+    function th(sel, key) { const e=document.querySelector(sel); if(e) e.innerHTML=t[key]; }
+    function ph(sel, key) { const e=document.querySelector(sel); if(e) e.placeholder=t[key]; }
+    // Nav desktop
+    const dl = document.querySelectorAll('.nav-links-desktop > li:not(.lang-switcher) a');
+    if(dl[0]) dl[0].textContent=t['nav.annonces'];
+    if(dl[1]) dl[1].textContent=t['nav.services'];
+    if(dl[2]) dl[2].textContent=t['nav.conciergerie'];
+    if(dl[3]) dl[3].textContent=t['nav.partenaires'];
+    if(dl[4]) dl[4].textContent=t['nav.cta'];
+    // Nav overlay
+    tx('.nav-overlay-tag','nav.tag');
+    const ol = document.querySelectorAll('.nav-overlay-links li a');
+    function setOL(el, txt) { const n=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim()); if(n) n.textContent=txt; }
+    if(ol[0]) setOL(ol[0],t['nav.annonces']);
+    if(ol[1]) setOL(ol[1],t['nav.services']);
+    if(ol[2]) setOL(ol[2],t['nav.conciergerie']);
+    if(ol[3]) setOL(ol[3],t['nav.comment']);
+    if(ol[4]) setOL(ol[4],t['nav.partenaires']);
+    if(ol[5]) setOL(ol[5],t['nav.cta']);
+    // Hero
+    tx('.hero-tag','hero.tag'); th('.hero-title','hero.title'); tx('.hero-sub','hero.sub');
+    tx('.hero-actions .btn-primary','hero.btn1'); tx('.hero-actions .btn-outline-hero','hero.btn2');
+    // Stats
+    const sl=document.querySelectorAll('.stat-label');
+    ['stat.satisfaction','stat.dispo','stat.gestion','stat.revenus'].forEach((k,i)=>{ if(sl[i]) sl[i].textContent=t[k]; });
+    // Annonces
+    tx('#annonces .section-tag','annonces.tag'); th('#annonces .section-title','annonces.title'); tx('#annonces .section-desc','annonces.desc');
+    const tabs=document.querySelectorAll('.tab-btn');
+    if(tabs[0]) tabs[0].textContent=t['annonces.tab1'];
+    if(tabs[1]) tabs[1].textContent=t['annonces.tab2'];
+    tx('#tab-location .coming-soon-title','annonces.loc.title'); tx('#tab-location .coming-soon-desc','annonces.loc.desc'); tx('#tab-location .btn-dark','annonces.loc.btn');
+    tx('#tab-vente .coming-soon-title','annonces.vente.title'); tx('#tab-vente .coming-soon-desc','annonces.vente.desc'); tx('#tab-vente .btn-dark','annonces.vente.btn');
+    // Services
+    tx('#services .section-tag','services.tag'); th('#services .section-title','services.title'); tx('#services .section-desc','services.desc');
+    const sc=document.querySelectorAll('.service-card');
+    ['s1','s2','s3','s4','s5','s6'].forEach((k,i)=>{ if(!sc[i]) return; tx2(sc[i],'.service-name',k+'.name'); tx2(sc[i],'.service-desc',k+'.desc'); });
+    // Conciergerie
+    tx('#conciergerie .section-tag','concierge.tag'); th('#conciergerie .section-title','concierge.title'); tx('#conciergerie .section-desc','concierge.desc');
+    const cc=document.querySelectorAll('.concierge-card');
+    ['c1','c2','c3','c4','c5','c6'].forEach((k,i)=>{ if(!cc[i]) return; tx2(cc[i],'.concierge-name',k+'.name'); tx2(cc[i],'.concierge-desc',k+'.desc'); });
+    // Process
+    tx('#processus .section-tag','process.tag'); th('#processus .section-title','process.title'); tx('#processus .section-desc','process.desc');
+    const ps=document.querySelectorAll('.process-step');
+    ['p1','p2','p3','p4'].forEach((k,i)=>{ if(!ps[i]) return; tx2(ps[i],'.step-title',k+'.title'); tx2(ps[i],'.step-desc',k+'.desc'); });
+    // Partenaires
+    tx('#partenaires .section-tag','part.tag'); th('#partenaires .section-title','part.title'); tx('#partenaires .section-desc','part.desc');
+    tx('#partenaires .coming-soon-title','part.cs.title'); tx('#partenaires .coming-soon-desc','part.cs.desc'); tx('#partenaires .btn-dark','part.cs.btn');
+    // Contact
+    tx('#contact .section-tag','contact.tag'); th('#contact .section-title','contact.title'); tx('#contact .section-desc','contact.desc');
+    const ci=document.querySelectorAll('.contact-item strong');
+    if(ci[0]) ci[0].textContent=t['contact.phone.label']; if(ci[1]) ci[1].textContent=t['contact.email.label'];
+    // Formulaire
+    const lb=document.querySelectorAll('.contact-form label');
+    ['form.fname','form.lname','form.email','form.phone','form.role','form.message'].forEach((k,i)=>{ if(lb[i]) lb[i].textContent=t[k]; });
+    ph('.contact-form input[type=text]:nth-of-type(1)','form.fname.ph');
+    ph('.contact-form input[type=text]:nth-of-type(2)','form.lname.ph');
+    ph('.contact-form input[type=email]','form.email.ph');
+    ph('.contact-form input[type=tel]','form.phone.ph');
+    ph('.contact-form textarea','form.message.ph');
+    const op=document.querySelectorAll('.contact-form select option');
+    ['form.role.opt0','form.role.opt1','form.role.opt2','form.role.opt3','form.role.opt4','form.role.opt5'].forEach((k,i)=>{ if(op[i]) op[i].textContent=t[k]; });
+    document.querySelector('.form-submit').textContent=t['form.submit'];
+    // Footer
+    const fl=document.querySelectorAll('.footer-links a');
+    ['footer.annonces','footer.services','footer.conciergerie','footer.partenaires','footer.contact'].forEach((k,i)=>{ if(fl[i]) fl[i].textContent=t[k]; });
+    tx('.footer-copy','footer.copy');
+  }
+  function tx2(parent, sel, key) { const e=parent.querySelector(sel); if(e) e.textContent=LANGS[document.documentElement.lang||'fr'][key]; }
 
   // ── CURSEUR CLÉ ──
   (function() {
