@@ -1088,9 +1088,9 @@
     if (!filtered.length) { container.innerHTML = comingSoonHTML(tabType); return; }
     var cards = filtered.map(function(l, i) {
       var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80';
-      return '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" onclick="openDetail(' + i + ','' + tabType + '')">' +
+      var card = '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" data-idx="' + i + '" data-tab="' + tabType + '">' +
         '<div class="listing-card-img">' +
-        '<img src="' + (l.Photo || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src='' + fallback + ''" loading="lazy"/>' +
+        '<img src="' + (l.Photo || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" loading="lazy"/>' +
         '<span class="listing-badge ' + (l.Type === 'Location' ? 'badge-loc' : 'badge-vente') + '">' + (l.Type === 'Location' ? 'Location' : 'À Vendre') + '</span>' +
         (l.Pays ? '<span class="listing-country">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '') +
         '</div><div class="listing-card-body">' +
@@ -1100,10 +1100,16 @@
         (l.Chambres ? '<span>🛏 ' + l.Chambres + '</span>' : '') +
         (l.SDB ? '<span>🚿 ' + l.SDB + '</span>' : '') +
         '</div></div></div>';
+      return card;
     }).join('');
     container.innerHTML = '<div class="listings-grid">' + cards + '</div>';
     setTimeout(function() {
-      container.querySelectorAll('.listing-card').forEach(function(c) { c.classList.add('visible'); });
+      container.querySelectorAll('.listing-card').forEach(function(c) {
+        c.classList.add('visible');
+        c.addEventListener('click', function() {
+          openDetail(parseInt(this.dataset.idx), this.dataset.tab);
+        });
+      });
       if (window._bindCursorHover) container.querySelectorAll('a,button,.listing-card').forEach(window._bindCursorHover);
     }, 60);
   }
@@ -1128,12 +1134,12 @@
     var galleryHTML;
     if (photos.length >= 2) {
       galleryHTML = '<div class="detail-gallery">' +
-        '<img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' +
-        (photos[1] ? '<img src="' + photos[1] + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' : '') +
-        (photos[2] ? '<img src="' + photos[2] + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' : '') +
+        '<img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' +
+        (photos[1] ? '<img src="' + photos[1] + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' : '') +
+        (photos[2] ? '<img src="' + photos[2] + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' : '') +
         '</div>';
     } else {
-      galleryHTML = '<div class="detail-gallery-single"><img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/></div>';
+      galleryHTML = '<div class="detail-gallery-single"><img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/></div>';
     }
     var waText = encodeURIComponent('Bonjour Berrada Hospitality, je suis intéressé par ce bien : ' + (l.Nom || ''));
     var specsHTML = '';
@@ -1157,7 +1163,7 @@
       '<p class="detail-price">' + (l.Type === 'Vente' ? 'Prix sur demande' : (l.Prix || '')) + '</p>' +
       specsHTML +
       (l.Description ? '<p class="detail-desc">' + l.Description + '</p>' : '') +
-      '<a href="https://wa.me/212660795649?text=' + waText + '" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-detail">Demander plus d'informations &#129002;</a>' +
+      '<a href="https://wa.me/212660795649?text=' + waText + '" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-detail">Demander plus d&#39;informations &#129002;</a>' +
       '</div>';
     overlay.classList.add('open');
     overlay.scrollTop = 0;
