@@ -368,8 +368,9 @@
     .service-card:hover::after { transform: translateX(100%); }
 
     /* ── DIVIDER ANIMÉ ── */
-    .divider { width: 0 !important; transition: width .9s cubic-bezier(.4,0,.2,1) !important; }
-    .divider.visible { width: 48px !important; }
+    .divider { transition: width .9s cubic-bezier(.4,0,.2,1); }
+    .divider-anim { width: 0 !important; }
+    .divider-anim.visible { width: 48px !important; }
 
     /* ── RESPONSIVE ANNONCES ── */
     @media (max-width: 900px) {
@@ -1006,9 +1007,10 @@
 
   // ── DIVIDERS ANIMÉS ──
   document.querySelectorAll('.divider').forEach(function(d) {
+    d.classList.add('divider-anim');
     new IntersectionObserver(function(entries) {
       entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.3 }).observe(d);
+    }, { threshold: 0 }).observe(d);
   });
 
   // ── COMPTEURS ANIMÉS ──
