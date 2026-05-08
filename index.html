@@ -1085,11 +1085,20 @@
   }
 
   function comingSoonHTML(type) {
-    return '<div class="coming-soon fade-in" style="margin-top:2rem">' +
-      '<span class="coming-soon-icon">' + (type === 'location' ? '🏠' : '🏷️') + '</span>' +
-      '<h3 class="coming-soon-title">Annonces bientôt disponibles</h3>' +
-      '<p class="coming-soon-desc">Revenez bientôt ou contactez-nous directement.</p>' +
-      '<a href="#contact" class="btn-dark">Nous contacter</a></div>';
+    if (type === 'vente') {
+      return '<div class="coming-soon" style="margin-top:2rem">' +
+        '<span class="coming-soon-icon">🏷️</span>' +
+        '<h3 class="coming-soon-title">Annonces de vente bientôt disponibles</h3>' +
+        '<p class="coming-soon-desc">Notre portefeuille de biens à vendre est en cours de constitution. Contactez-nous pour être informé en priorité.</p>' +
+        '<a href="https://wa.me/212660795649?text=Bonjour%20Berrada%20Hospitality%2C%20je%20souhaite%20%C3%AAtre%20inform%C3%A9%20en%20priorit%C3%A9%20de%20vos%20nouvelles%20annonces%20de%20vente." class="btn-dark" target="_blank" rel="noopener noreferrer">Être informé en priorité</a>' +
+        '</div>';
+    }
+    return '<div class="coming-soon" style="margin-top:2rem">' +
+      '<span class="coming-soon-icon">🏠</span>' +
+      '<h3 class="coming-soon-title">Annonces de location bientôt disponibles</h3>' +
+      '<p class="coming-soon-desc">Nous préparons une sélection de biens d&#39;exception à louer au Maroc. Revenez bientôt ou contactez-nous directement.</p>' +
+      '<a href="#contact" class="btn-dark">Nous contacter</a>' +
+      '</div>';
   }
 
   function renderListings(tabType) {
