@@ -1165,6 +1165,7 @@
 
   // Résolution asynchrone des liens de partage ImgBB (ibb.co/XXX)
   var _ibbCache = {};
+  try { var _s = localStorage.getItem('ibbCache'); if (_s) _ibbCache = JSON.parse(_s); } catch(e) {}
   async function resolveImgUrl(url) {
     if (!url || !url.trim()) return '';
     var base = imgUrl(url);
@@ -1179,6 +1180,7 @@
                     html.match(/content="([^"]+)"\s+property="og:image"/);
         if (match && match[1]) {
           _ibbCache[url] = match[1];
+          try { localStorage.setItem('ibbCache', JSON.stringify(_ibbCache)); } catch(e) {}
           return match[1];
         }
       } catch(e) {}
