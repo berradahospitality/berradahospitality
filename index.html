@@ -1209,7 +1209,7 @@
     renderListings(tabType);
   }
 
-  function openDetail(idx, tabType) {
+  async function openDetail(idx, tabType) {
     var type = tabType === 'location' ? 'Location' : 'Vente';
     var country = activeFilters[tabType];
     var filtered = allListings.filter(function(l) { return l.Type === type && l.Actif === 'Oui'; });
@@ -1217,16 +1217,19 @@
     var l = filtered[idx];
     if (!l) return;
     var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=800&q=80';
-    var photos = [imgUrl(l.Photo), imgUrl(l.Photo2), imgUrl(l.Photo3)].filter(function(p) { return p && p.trim(); });
+    // Résoudre toutes les URLs via proxy si nécessaire
+    var rawPhotos = [l.Photo, l.Photo2, l.Photo3].filter(function(p) { return p && p.trim(); });
+    var photos = await Promise.all(rawPhotos.map(function(p) { return resolveImgUrl(p); }));
+    photos = photos.filter(function(p) { return p && p.trim(); });
     var galleryHTML;
     if (photos.length >= 2) {
       galleryHTML = '<div class="detail-gallery">' +
-        '<img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' +
-        (photos[1] ? '<img src="' + photos[1] + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' : '') +
-        (photos[2] ? '<img src="' + photos[2] + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/>' : '') +
+        '<img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' +
+        (photos[1] ? '<img src="' + photos[1] + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' : '') +
+        (photos[2] ? '<img src="' + photos[2] + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/>' : '') +
         '</div>';
     } else {
-      galleryHTML = '<div class="detail-gallery-single"><img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '"/></div>';
+      galleryHTML = '<div class="detail-gallery-single"><img src="' + (photos[0] || fallback) + '" alt="' + l.Nom + '" onerror="this.src='' + fallback + ''"/></div>';
     }
     var waText = encodeURIComponent('Bonjour Berrada Hospitality, je suis intéressé par ce bien : ' + (l.Nom || ''));
     var specsHTML = '';
