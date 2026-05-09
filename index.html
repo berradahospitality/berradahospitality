@@ -1214,7 +1214,7 @@
       '</div>';
   }
 
-  function renderListings(tabType) {
+  async function renderListings(tabType) {
     var container = document.getElementById('listings-' + tabType);
     if (!container) return;
     var type = tabType === 'location' ? 'Location' : 'Vente';
@@ -1222,11 +1222,14 @@
     var filtered = allListings.filter(function(l) { return l.Type === type && l.Actif === 'Oui'; });
     if (country !== 'all') filtered = filtered.filter(function(l) { return l.Pays === country; });
     if (!filtered.length) { container.innerHTML = comingSoonHTML(tabType); return; }
+    var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80';
+    // Résoudre toutes les URLs photos en parallèle AVANT de rendre
+    var resolvedPhotos = await Promise.all(filtered.map(function(l) { return resolveImgUrl(l.Photo); }));
     var cards = filtered.map(function(l, i) {
-      var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80';
+      var src = resolvedPhotos[i] || fallback;
       var card = '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" data-idx="' + i + '" data-tab="' + tabType + '">' +
         '<div class="listing-card-img">' +
-        '<img src="' + (imgUrl(l.Photo) || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" data-rawsrc="' + (l.Photo||'') + '" loading="lazy"/>' +
+        '<img src="' + src + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" loading="lazy"/>' +
         '<div class="listing-card-overlay">' +
         '<div class="listing-card-top">' +
         '<span class="listing-badge ' + (l.Type === 'Location' ? 'badge-loc' : 'badge-vente') + '">' + (l.Type === 'Location' ? 'Location' : 'À Vendre') + '</span>' +
@@ -1236,8 +1239,8 @@
         '<h3 class="listing-name">' + (l.Nom || '') + '</h3>' +
         '<p class="listing-price">' + (l.Type === 'Vente' ? 'Prix sur demande' : (l.Prix || '')) + '</p>' +
         '<div class="listing-meta">' +
-        (l.Chambres ? '<span>🛏 ' + l.Chambres + '</span>' : '') +
-        (l.SDB ? '<span>🚿 ' + l.SDB + '</span>' : '') +
+        (l.Chambres ? '<span>\U0001F6CF ' + l.Chambres + '</span>' : '') +
+        (l.SDB ? '<span>\U0001F6BF ' + l.SDB + '</span>' : '') +
         '</div></div></div>' +
         '</div></div>';
       return card;
@@ -1249,11 +1252,6 @@
         c.addEventListener('click', function() {
           openDetail(parseInt(this.dataset.idx), this.dataset.tab);
         });
-        // Résoudre les liens de partage ImgBB si nécessaire
-        var img = c.querySelector('img');
-        if (img && img.dataset && img.dataset.rawsrc && /^https?:\/\/ibb\.co\//.test(img.dataset.rawsrc)) {
-          resolveAndSet(img, img.dataset.rawsrc, img.dataset.fb || '');
-        }
       });
       if (window._bindCursorHover) container.querySelectorAll('a,button,.listing-card').forEach(window._bindCursorHover);
     }, 60);
