@@ -1097,8 +1097,11 @@
   function imgUrl(url) {
     if (!url || !url.trim()) return '';
     if (url.indexOf('drive.google.com') !== -1) {
-      var m = url.match(/[?&]id=([^&]+)/) || url.match(/\/d\/([^/?]+)/);
-      if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1200';
+      if (url.indexOf('uc?export=view') !== -1 || url.indexOf('uc?id=') !== -1) return url;
+      var m = url.match(/\/d\/([^/?]+)/);
+      if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+      var m2 = url.match(/[?&]id=([^&]+)/);
+      if (m2) return 'https://drive.google.com/uc?export=view&id=' + m2[1];
     }
     return url;
   }
