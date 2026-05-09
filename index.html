@@ -1055,16 +1055,26 @@
   var allListings = [];
   var activeFilters = { location: 'all', vente: 'all' };
 
+  // Mapping colonnes Google Sheet → noms internes
+  var COL = {
+    'TYPE':'Type','NOM':'Nom','PRIX':'Prix','CHAMBRE':'Chambres',
+    'SDB':'SDB','SDB ':'SDB','EQUIPEMENT':'Equipements',
+    'PHOTOS':'Photo','ACTIF':'Actif','DESCRIPTION':'Description',
+    'PHOTO 1':'Photo2','PHOTO 2':'Photo3','PAYS':'Pays'
+  };
+
   function parseCSV(text) {
     var lines = text.replace(/\r/g, '').split('\n').filter(function(l) { return l.trim(); });
-    var headers = [];
+    var rawHeaders = [];
     var cur = '', inQ = false;
     for (var i = 0; i < lines[0].length + 1; i++) {
       var c = i < lines[0].length ? lines[0][i] : ',';
       if (c === '"') inQ = !inQ;
-      else if (c === ',' && !inQ) { headers.push(cur.trim().replace(/^"|"$/g, '')); cur = ''; }
+      else if (c === ',' && !inQ) { rawHeaders.push(cur.trim().replace(/^"|"$/g, '')); cur = ''; }
       else cur += c;
     }
+    // Normaliser les en-têtes via le mapping
+    var headers = rawHeaders.map(function(h) { return COL[h] || h; });
     return lines.slice(1).map(function(line) {
       var vals = [], v = '', q = false;
       for (var i = 0; i < line.length + 1; i++) {
@@ -1074,7 +1084,12 @@
         else v += c;
       }
       var obj = {};
-      headers.forEach(function(h, i) { obj[h] = vals[i] !== undefined ? vals[i] : ''; });
+      headers.forEach(function(h, i) {
+        var val = vals[i] !== undefined ? vals[i] : '';
+        // Normaliser Pays en title case (FRANCE → France, MAROC → Maroc)
+        if (h === 'Pays') val = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+        obj[h] = val;
+      });
       return obj;
     });
   }
