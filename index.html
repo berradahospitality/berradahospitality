@@ -1096,6 +1096,9 @@
 
   function imgUrl(url) {
     if (!url || !url.trim()) return '';
+    // Lien direct ImgBB → garder tel quel
+    if (url.indexOf('i.ibb.co') !== -1) return url;
+    // Google Drive
     if (url.indexOf('drive.google.com') !== -1) {
       if (url.indexOf('uc?export=view') !== -1 || url.indexOf('uc?id=') !== -1) return url;
       var m = url.match(/\/d\/([^/?]+)/);
@@ -1104,6 +1107,35 @@
       if (m2) return 'https://drive.google.com/uc?export=view&id=' + m2[1];
     }
     return url;
+  }
+
+  // Résolution asynchrone des liens de partage ImgBB (ibb.co/XXX)
+  var _ibbCache = {};
+  async function resolveImgUrl(url) {
+    if (!url || !url.trim()) return '';
+    var base = imgUrl(url);
+    // Lien de partage ImgBB (pas i.ibb.co) → résoudre via proxy CORS
+    if (/^https?:\/\/ibb\.co\//.test(url)) {
+      if (_ibbCache[url]) return _ibbCache[url];
+      try {
+        var proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+        var res = await fetch(proxy);
+        var html = await res.text();
+        var match = html.match(/property="og:image"\s+content="([^"]+)"/) ||
+                    html.match(/content="([^"]+)"\s+property="og:image"/);
+        if (match && match[1]) {
+          _ibbCache[url] = match[1];
+          return match[1];
+        }
+      } catch(e) {}
+    }
+    return base;
+  }
+
+  async function resolveAndSet(imgEl, url, fallback) {
+    var direct = await resolveImgUrl(url);
+    imgEl.src = direct || fallback;
+    imgEl.onerror = function() { this.src = fallback; };
   }
 
   function getFlag(pays) {
@@ -1140,7 +1172,7 @@
       var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80';
       var card = '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" data-idx="' + i + '" data-tab="' + tabType + '">' +
         '<div class="listing-card-img">' +
-        '<img src="' + (imgUrl(l.Photo) || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" loading="lazy"/>' +
+        '<img src="' + (imgUrl(l.Photo) || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" data-rawsrc="' + (l.Photo||'') + '" loading="lazy"/>' +
         '<span class="listing-badge ' + (l.Type === 'Location' ? 'badge-loc' : 'badge-vente') + '">' + (l.Type === 'Location' ? 'Location' : 'À Vendre') + '</span>' +
         (l.Pays ? '<span class="listing-country">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '') +
         '</div><div class="listing-card-body">' +
@@ -1159,6 +1191,11 @@
         c.addEventListener('click', function() {
           openDetail(parseInt(this.dataset.idx), this.dataset.tab);
         });
+        // Résoudre les liens de partage ImgBB si nécessaire
+        var img = c.querySelector('img');
+        if (img && img.dataset && img.dataset.rawsrc && /^https?:\/\/ibb\.co\//.test(img.dataset.rawsrc)) {
+          resolveAndSet(img, img.dataset.rawsrc, img.dataset.fb || '');
+        }
       });
       if (window._bindCursorHover) container.querySelectorAll('a,button,.listing-card').forEach(window._bindCursorHover);
     }, 60);
