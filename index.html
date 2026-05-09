@@ -1094,6 +1094,15 @@
     });
   }
 
+  function imgUrl(url) {
+    if (!url || !url.trim()) return '';
+    if (url.indexOf('drive.google.com') !== -1) {
+      var m = url.match(/[?&]id=([^&]+)/) || url.match(/\/d\/([^/?]+)/);
+      if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1200';
+    }
+    return url;
+  }
+
   function getFlag(pays) {
     if (!pays) return '';
     return pays.indexOf('France') !== -1 ? '&#127467;&#127479;' : '&#127474;&#127462;';
@@ -1128,7 +1137,7 @@
       var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80';
       var card = '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" data-idx="' + i + '" data-tab="' + tabType + '">' +
         '<div class="listing-card-img">' +
-        '<img src="' + (l.Photo || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" loading="lazy"/>' +
+        '<img src="' + (imgUrl(l.Photo) || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" loading="lazy"/>' +
         '<span class="listing-badge ' + (l.Type === 'Location' ? 'badge-loc' : 'badge-vente') + '">' + (l.Type === 'Location' ? 'Location' : 'À Vendre') + '</span>' +
         (l.Pays ? '<span class="listing-country">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '') +
         '</div><div class="listing-card-body">' +
@@ -1168,7 +1177,7 @@
     var l = filtered[idx];
     if (!l) return;
     var fallback = 'https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=800&q=80';
-    var photos = [l.Photo, l.Photo2, l.Photo3].filter(function(p) { return p && p.trim(); });
+    var photos = [imgUrl(l.Photo), imgUrl(l.Photo2), imgUrl(l.Photo3)].filter(function(p) { return p && p.trim(); });
     var galleryHTML;
     if (photos.length >= 2) {
       galleryHTML = '<div class="detail-gallery">' +
