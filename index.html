@@ -326,19 +326,32 @@
 
     /* ── CARDS ANNONCES ── */
     .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 2rem; padding: .5rem 0 2rem; }
-    .listing-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; transition: transform .3s, box-shadow .3s; }
-    .listing-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(30,27,24,.12); }
-    .listing-card-img { position: relative; height: 220px; overflow: hidden; }
-    .listing-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; display: block; }
-    .listing-card:hover .listing-card-img img { transform: scale(1.06); }
-    .listing-badge { position: absolute; top: .8rem; left: .8rem; padding: .25rem .7rem; border-radius: 2px; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
+    .listing-card { border-radius: 4px; overflow: hidden; transition: transform .35s, box-shadow .35s; position: relative; }
+    .listing-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(30,27,24,.18); }
+    .listing-card-img { position: relative; height: 300px; overflow: hidden; }
+    .listing-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; display: block; }
+    .listing-card:hover .listing-card-img img { transform: scale(1.07); }
+    /* Overlay gradient toujours visible */
+    .listing-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(20,17,14,.88) 0%, rgba(20,17,14,.35) 45%, transparent 100%);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: .9rem 1.1rem;
+      transition: background .3s;
+    }
+    .listing-card:hover .listing-card-overlay { background: linear-gradient(to top, rgba(20,17,14,.92) 0%, rgba(20,17,14,.45) 55%, transparent 100%); }
+    /* Badges en haut */
+    .listing-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .listing-badge { padding: .28rem .75rem; border-radius: 2px; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; }
     .badge-loc { background: var(--clay); color: #fff; }
     .badge-vente { background: var(--ink); color: var(--sand); }
-    .listing-country { position: absolute; top: .8rem; right: .8rem; background: rgba(251,248,243,.92); padding: .2rem .6rem; border-radius: 2px; font-size: .72rem; }
-    .listing-card-body { padding: 1.2rem 1.4rem 1.4rem; }
-    .listing-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: .4rem; }
-    .listing-price { font-size: .85rem; color: var(--clay); letter-spacing: .06em; margin-bottom: .8rem; font-weight: 500; }
-    .listing-meta { display: flex; gap: 1rem; font-size: .75rem; color: #7a7570; flex-wrap: wrap; }
+    .listing-country { background: rgba(251,248,243,.15); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.2); padding: .22rem .6rem; border-radius: 2px; font-size: .7rem; color: rgba(245,239,230,.9); }
+    /* Infos en bas animées */
+    .listing-card-info { color: #fff; transform: translateY(10px); transition: transform .35s ease; }
+    .listing-card:hover .listing-card-info { transform: translateY(0); }
+    .listing-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: #fff; margin-bottom: .3rem; line-height: 1.2; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .listing-price { font-size: .82rem; color: var(--clay); letter-spacing: .08em; margin-bottom: .45rem; font-weight: 500; }
+    .listing-meta { display: flex; gap: .8rem; font-size: .72rem; color: rgba(245,239,230,.65); flex-wrap: wrap; }
 
     /* ── OVERLAY DÉTAIL ── */
     .listing-detail-overlay { position: fixed; inset: 0; z-index: 1000; background: var(--cream); overflow-y: auto; opacity: 0; pointer-events: none; transform: translateY(24px); transition: opacity .35s, transform .35s; }
@@ -1173,15 +1186,19 @@
       var card = '<div class="listing-card fade-in" style="animation-delay:' + (i * 0.1) + 's" data-idx="' + i + '" data-tab="' + tabType + '">' +
         '<div class="listing-card-img">' +
         '<img src="' + (imgUrl(l.Photo) || fallback) + '" alt="' + (l.Nom || '') + '" onerror="this.src=this.dataset.fb" data-fb="' + fallback + '" data-rawsrc="' + (l.Photo||'') + '" loading="lazy"/>' +
+        '<div class="listing-card-overlay">' +
+        '<div class="listing-card-top">' +
         '<span class="listing-badge ' + (l.Type === 'Location' ? 'badge-loc' : 'badge-vente') + '">' + (l.Type === 'Location' ? 'Location' : 'À Vendre') + '</span>' +
-        (l.Pays ? '<span class="listing-country">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '') +
-        '</div><div class="listing-card-body">' +
+        (l.Pays ? '<span class="listing-country">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '<span></span>') +
+        '</div>' +
+        '<div class="listing-card-info">' +
         '<h3 class="listing-name">' + (l.Nom || '') + '</h3>' +
         '<p class="listing-price">' + (l.Type === 'Vente' ? 'Prix sur demande' : (l.Prix || '')) + '</p>' +
         '<div class="listing-meta">' +
         (l.Chambres ? '<span>🛏 ' + l.Chambres + '</span>' : '') +
         (l.SDB ? '<span>🚿 ' + l.SDB + '</span>' : '') +
-        '</div></div></div>';
+        '</div></div></div>' +
+        '</div></div>';
       return card;
     }).join('');
     container.innerHTML = '<div class="listings-grid">' + cards + '</div>';
