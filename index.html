@@ -1118,7 +1118,7 @@
     if (/^https?:\/\/ibb\.co\//.test(url)) {
       if (_ibbCache[url]) return _ibbCache[url];
       try {
-        var proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+        var proxy = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
         var res = await fetch(proxy);
         var html = await res.text();
         var match = html.match(/property="og:image"\s+content="([^"]+)"/) ||
