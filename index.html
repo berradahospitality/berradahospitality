@@ -689,25 +689,33 @@
     </div>
   </div>
   <div class="contact-form fade-right">
-    <div class="form-row">
-      <div class="form-group"><label>Prénom</label><input type="text" placeholder="Ahmed" /></div>
-      <div class="form-group"><label>Nom</label><input type="text" placeholder="Berrada" /></div>
+    <div id="form-success" style="display:none; text-align:center; padding:2rem 0;">
+      <div style="font-size:2.5rem; margin-bottom:1rem;">✅</div>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--sand); margin-bottom:.6rem;">Message envoyé avec succès</p>
+      <p style="font-size:.88rem; color:rgba(245,239,230,.5);">Nous vous répondrons dans les 24 heures.</p>
     </div>
-    <div class="form-group"><label>Email</label><input type="email" placeholder="vous@exemple.com" /></div>
-    <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+212 6 XX XX XX XX" dir="ltr" /></div>
-    <div class="form-group">
-      <label>Vous êtes…</label>
-      <select>
-        <option value="">Choisir une option</option>
-        <option>Propriétaire souhaitant confier mon bien</option>
-        <option>Investisseur à la recherche d'un bien</option>
-        <option>Voyageur souhaitant réserver</option>
-        <option>Partenaire potentiel</option>
-        <option>Autre</option>
-      </select>
-    </div>
-    <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Décrivez votre projet…"></textarea></div>
-    <button class="form-submit">Envoyer ma demande →</button>
+    <form id="contact-form" action="https://formspree.io/f/mwvzejyq" method="POST">
+      <input type="hidden" name="_gotcha" style="display:none" />
+      <div class="form-row">
+        <div class="form-group"><label>Prénom</label><input type="text" name="prenom" placeholder="Ahmed" required /></div>
+        <div class="form-group"><label>Nom</label><input type="text" name="nom" placeholder="Berrada" required /></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="vous@exemple.com" required /></div>
+      <div class="form-group"><label>Téléphone</label><input type="tel" name="telephone" placeholder="+212 6 XX XX XX XX" dir="ltr" /></div>
+      <div class="form-group">
+        <label>Vous êtes…</label>
+        <select name="profil" required>
+          <option value="">Choisir une option</option>
+          <option>Propriétaire souhaitant confier mon bien</option>
+          <option>Investisseur à la recherche d'un bien</option>
+          <option>Voyageur souhaitant réserver</option>
+          <option>Partenaire potentiel</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea name="message" rows="4" placeholder="Décrivez votre projet…"></textarea></div>
+      <button type="submit" class="form-submit">Envoyer ma demande →</button>
+    </form>
   </div>
 </section>
 
@@ -1379,6 +1387,34 @@
     }
   }
   loadListings();
+
+  // ── FORMULAIRE FORMSPREE ──
+  var contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var btn = contactForm.querySelector('.form-submit');
+      btn.textContent = 'Envoi en cours…';
+      btn.disabled = true;
+      try {
+        var res = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          contactForm.style.display = 'none';
+          document.getElementById('form-success').style.display = 'block';
+        } else {
+          btn.textContent = 'Erreur — réessayer';
+          btn.disabled = false;
+        }
+      } catch(err) {
+        btn.textContent = 'Erreur — réessayer';
+        btn.disabled = false;
+      }
+    });
+  }
 
 </script>
 </body>
