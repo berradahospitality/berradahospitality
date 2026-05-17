@@ -8,6 +8,7 @@
   <meta name="description" content="Berrada Hospitality, votre conciergerie immobilière au Maroc. Gestion locative, location courte durée, vente et conciergerie haut de gamme. Service 24/7 disponible à Tanger, Marrakech et partout au Maroc.">
   <meta name="keywords" content="conciergerie immobilière Maroc, gestion locative Maroc, property management Maroc, location courte durée Maroc, conciergerie Airbnb Maroc, agence immobilière Tanger, gestion bien Maroc">
   <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#C8A97E">
   <link rel="canonical" href="https://berradahospitality.com/">
   <meta property="og:title" content="Berrada Hospitality — Conciergerie Immobilière au Maroc">
   <meta property="og:description" content="Gestion locative, location courte durée et conciergerie haut de gamme au Maroc. Confiez-nous votre bien, nous gérons tout.">
@@ -22,6 +23,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Cairo:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -435,9 +437,38 @@
     .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.5); transition: background .2s; }
     .carousel-dot.active { background: #fff; }
     @media (max-width: 900px) { .detail-carousel { aspect-ratio: 4/5; } }
+
+    /* ── ACCESSIBILITÉ ── */
+    :focus-visible { outline: 2px solid var(--clay); outline-offset: 3px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--clay); outline-offset: 3px; }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Berrada Hospitality",
+    "description": "Conciergerie immobilière haut de gamme au Maroc — gestion locative, vente, conciergerie et investissement.",
+    "url": "https://berradahospitality.com",
+    "logo": "https://berradahospitality.com/logo.png",
+    "image": "https://berradahospitality.com/logo.png",
+    "telephone": "+212660795649",
+    "email": "berradahospitality@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "MA"
+    },
+    "openingHours": "Mo-Su 00:00-23:59",
+    "sameAs": [
+      "https://www.instagram.com/berradahospitality/"
+    ],
+    "areaServed": ["Maroc", "France"],
+    "serviceType": ["Gestion locative", "Achat et vente immobilier", "Conciergerie", "Conseil en investissement"]
+  }
+  </script>
 </head>
 <body>
+<a href="#annonces" style="position:absolute;top:-40px;left:0;background:var(--clay);color:#fff;padding:.5rem 1rem;z-index:10000;transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Passer au contenu</a>
 
 <div id="progress-bar"></div>
 
@@ -487,7 +518,7 @@
       <li><a href="#contact"     onclick="closeMenu()" class="highlight"><span class="link-num">06</span>Nous contacter</a></li>
     </ul>
     <div class="nav-overlay-footer">
-      <a href="https://wa.me/212660795649" target="_blank" dir="ltr" style="unicode-bidi:embed;">+212 6 60 79 56 49</a>
+      <a href="https://wa.me/212660795649" target="_blank" dir="ltr" style="unicode-bidi:embed;" rel="noopener noreferrer">+212 6 60 79 56 49</a>
       <a href="mailto:berradahospitality@gmail.com">berradahospitality@gmail.com</a>
       <div style="display:flex;gap:.4rem;margin-bottom:.8rem;width:100%;">
         <button class="lang-btn active" style="color:rgba(245,239,230,.6);border-color:rgba(200,169,126,.25);" onclick="setLang('fr');closeMenu()">FR</button>
@@ -589,23 +620,23 @@
 <div class="photo-band">
   <!-- Chefchaouen -->
   <div class="photo-band-item">
-    <img src="https://images.unsplash.com/photo-1682972443796-1da80df666f3?w=500&q=80" alt="Tanger" />
+    <img src="https://images.unsplash.com/photo-1682972443796-1da80df666f3?w=500&q=80" alt="Tanger"  loading="lazy"/>
   </div>
   <!-- Désert Sahara -->
   <div class="photo-band-item">
-    <img src="https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80" alt="Riad Maroc" />
+    <img src="https://images.unsplash.com/photo-1527769814692-b9066e3cbcf2?w=500&q=80" alt="Riad Maroc"  loading="lazy"/>
   </div>
   <!-- Riad / piscine -->
   <div class="photo-band-item">
-    <img src="https://images.unsplash.com/photo-1569383746724-6f1b882b8f46?w=500&q=80" alt="Chefchaouen" />
+    <img src="https://images.unsplash.com/photo-1569383746724-6f1b882b8f46?w=500&q=80" alt="Chefchaouen"  loading="lazy"/>
   </div>
   <!-- Médina -->
   <div class="photo-band-item">
-    <img src="https://images.unsplash.com/photo-1555686367-56d5186965d5?w=500&q=80" alt="Essaouira" />
+    <img src="https://images.unsplash.com/photo-1555686367-56d5186965d5?w=500&q=80" alt="Essaouira"  loading="lazy"/>
   </div>
   <!-- Atlas / paysage -->
   <div class="photo-band-item">
-    <img src="https://images.unsplash.com/photo-1443904364754-fb9a64fe19e5?w=500&q=80" alt="Atlas Maroc" />
+    <img src="https://images.unsplash.com/photo-1443904364754-fb9a64fe19e5?w=500&q=80" alt="Atlas Maroc"  loading="lazy"/>
   </div>
 </div>
 
@@ -684,7 +715,7 @@
     <h2 class="section-title">Prêt à <em>nous confier</em><br/>votre bien ?</h2>
     <p class="section-desc">Propriétaire, investisseur ou voyageur — notre équipe répond sous 24h.</p>
     <div class="contact-info">
-      <div class="contact-item"><div class="contact-item-icon">📞</div><div><strong>Téléphone & WhatsApp</strong><a href="https://wa.me/212660795649" target="_blank" style="color:inherit; text-decoration:none; direction:ltr; unicode-bidi:embed; display:inline-block;">+212 6 60 79 56 49</a></div></div>
+      <div class="contact-item"><div class="contact-item-icon">📞</div><div><strong>Téléphone & WhatsApp</strong><a href="https://wa.me/212660795649" target="_blank" style="color:inherit; text-decoration:none; direction:ltr; unicode-bidi:embed; display:inline-block;" rel="noopener noreferrer">+212 6 60 79 56 49</a></div></div>
       <div class="contact-item"><div class="contact-item-icon">✉️</div><div><strong>Email</strong><a href="mailto:berradahospitality@gmail.com" style="color:inherit; text-decoration:none;">berradahospitality@gmail.com</a></div></div>
     </div>
   </div>
@@ -742,7 +773,7 @@
       </svg>
     </a>
   </div>
-  <p class="footer-copy">© 2025 Berrada Hospitality · Tous droits réservés</p>
+  <p class="footer-copy">© 2026 Berrada Hospitality · Tous droits réservés</p>
 </footer>
 
 <script>
@@ -851,7 +882,7 @@
       'form.message':'Message','form.message.ph':'Décrivez votre projet…','form.submit':'Envoyer ma demande →',
       'footer.annonces':'Annonces','footer.services':'Services','footer.conciergerie':'Conciergerie',
       'footer.partenaires':'Partenaires','footer.contact':'Contact',
-      'footer.copy':'© 2025 Berrada Hospitality · Tous droits réservés'
+      'footer.copy':'© 2026 Berrada Hospitality · Tous droits réservés'
     },
     en: {
       'nav.annonces':'Listings','nav.services':'Services','nav.conciergerie':'Concierge',
@@ -910,7 +941,7 @@
       'form.message':'Message','form.message.ph':'Describe your project…','form.submit':'Send my request →',
       'footer.annonces':'Listings','footer.services':'Services','footer.conciergerie':'Concierge',
       'footer.partenaires':'Partners','footer.contact':'Contact',
-      'footer.copy':'© 2025 Berrada Hospitality · All rights reserved'
+      'footer.copy':'© 2026 Berrada Hospitality · All rights reserved'
     },
     ar: {
       'nav.annonces':'الإعلانات','nav.services':'الخدمات','nav.conciergerie':'الكونسيرج',
@@ -969,7 +1000,7 @@
       'form.message':'الرسالة','form.message.ph':'صف مشروعك…','form.submit':'← إرسال طلبي',
       'footer.annonces':'الإعلانات','footer.services':'الخدمات','footer.conciergerie':'الكونسيرج',
       'footer.partenaires':'الشركاء','footer.contact':'اتصل بنا',
-      'footer.copy':'© 2025 Berrada Hospitality · جميع الحقوق محفوظة'
+      'footer.copy':'© 2026 Berrada Hospitality · جميع الحقوق محفوظة'
     }
   };
 
@@ -1328,7 +1359,7 @@
       '<span class="detail-badge ' + badge + '">' + badgeLabel + '</span>' +
       (l.Pays ? '<span class="detail-badge" style="background:var(--sand);color:var(--ink);">' + getFlag(l.Pays) + ' ' + l.Pays + '</span>' : '') +
       '</div>' +
-      '<h1 class="detail-title">' + (l.Nom || '') + '</h1>' +
+      '<h2 class="detail-title">' + (l.Nom || '') + '</h2>' +
       '<p class="detail-price">' + price + '</p>' +
       specsHTML +
       (l.Description ? '<p class="detail-desc">' + l.Description + '</p>' : '') +
